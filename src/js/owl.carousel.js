@@ -694,7 +694,9 @@
 	 * @protected
 	 * @param {Event} event - The event arguments.
 	 */
-	Owl.prototype.onDragStart = function(event) {
+	Owl.prototype.onDragStart = function(event, mock) {
+		event = (mock === undefined) ? event : $.extend(event, { originalEvent: mock });
+
 		var stage = null;
 
 		if (event.which === 3) {
@@ -734,7 +736,9 @@
 
 		$(document).on('mouseup.owl.core touchend.owl.core', $.proxy(this.onDragEnd, this));
 
-		$(document).one('mousemove.owl.core touchmove.owl.core', $.proxy(function(event) {
+		$(document).one('mousemove.owl.core touchmove.owl.core', $.proxy(function(event, mock) {
+			event = (mock === undefined) ? event : $.extend(event, { originalEvent: mock });
+
 			var delta = this.difference(this._drag.pointer, this.pointer(event));
 
 			$(document).on('mousemove.owl.core touchmove.owl.core', $.proxy(this.onDragMove, this));
@@ -756,7 +760,9 @@
 	 * @protected
 	 * @param {Event} event - The event arguments.
 	 */
-	Owl.prototype.onDragMove = function(event) {
+	Owl.prototype.onDragMove = function(event, mock) {
+		event = (mock === undefined) ? event : $.extend(event, { originalEvent: mock });
+
 		var minimum = null,
 			maximum = null,
 			pull = null,
@@ -792,7 +798,9 @@
 	 * @protected
 	 * @param {Event} event - The event arguments.
 	 */
-	Owl.prototype.onDragEnd = function(event) {
+	Owl.prototype.onDragEnd = function(event, mock) {
+		event = (mock === undefined) ? event : $.extend(event, { originalEvent: mock });
+
 		var delta = this.difference(this._drag.pointer, this.pointer(event)),
 			stage = this._drag.stage.current,
 			direction = delta.x > 0 ^ this.settings.rtl ? 'left' : 'right';
