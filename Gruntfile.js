@@ -95,11 +95,14 @@ module.exports = function(grunt) {
 					options: {
 						outputStyle: 'nested'
 					},
-					files: {
-						'dist/assets/<%= pkg.name %>.css': 'src/scss/<%= pkg.name %>.scss',
-						'dist/assets/owl.theme.default.css': 'src/scss/owl.theme.default.scss',
-						'dist/assets/owl.theme.green.css': 'src/scss/owl.theme.green.scss'
-					}
+					files: [ {
+                        expand: true,
+                        cwd: 'src/scss/',
+                        src: [ '<%= pkg.name %>.scss', 'owl.theme.default.scss', 'owl.theme.green.scss', '<%= pkg.name %>.themed.scss' ],
+                        dest: 'dist/assets/',
+                        ext: '.css',
+                        extDot: 'last'
+					} ]
 				}
 			},
 
@@ -108,11 +111,12 @@ module.exports = function(grunt) {
 					browsers: [ 'last 2 versions', 'ie 7', 'ie 8', 'ie 9', 'ie 10', 'ie 11' ]
 				},
 				dist: {
-					files: {
-						'dist/assets/<%= pkg.name %>.css': 'dist/assets/<%= pkg.name %>.css',
-						'dist/assets/owl.theme.default.css': 'dist/assets/owl.theme.default.css',
-						'dist/assets/owl.theme.green.css': 'dist/assets/owl.theme.green.css'
-					}
+					files: [ {
+                        expand: true,
+                        cwd: 'dist/assets/',
+                        src: [ '<%= pkg.name %>.css', 'owl.theme.default.css', 'owl.theme.green.css', '<%= pkg.name %>.themed.css' ],
+						dest: 'dist/assets/'
+					} ]
 				}
 			},
 
@@ -126,11 +130,14 @@ module.exports = function(grunt) {
 
 			cssmin: {
 				dist: {
-					files: {
-						'dist/assets/<%= pkg.name %>.min.css': 'dist/assets/<%= pkg.name %>.css',
-						'dist/assets/owl.theme.default.min.css': 'dist/assets/owl.theme.default.css',
-						'dist/assets/owl.theme.green.min.css': 'dist/assets/owl.theme.green.css'
-					}
+					files: [ {
+                        expand: true,
+                        cwd: 'dist/assets/',
+                        src: [ '<%= pkg.name %>.css', 'owl.theme.default.css', 'owl.theme.green.css', '<%= pkg.name %>.themed.css' ],
+						dest: 'dist/assets/',
+                        ext: '.min.css',
+                        extDot: 'last'
+					} ]
 				}
 			},
 
@@ -316,6 +323,8 @@ module.exports = function(grunt) {
 	grunt.registerTask('test', [ 'jshint:dist', 'qunit:dist', 'blanket_qunit:dist' ]);
 
 	grunt.registerTask('default', [ 'dist', 'docs', 'test' ]);
+
+    grunt.registerTask('nodocs', [ 'dist', 'test' ]);
 
 	grunt.registerTask('serve', [ 'connect:docs', 'watch' ]);
 

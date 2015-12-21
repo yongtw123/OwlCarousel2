@@ -135,3 +135,5 @@ test('destroy', function() {
 	
 	equal(simple.get(0).outerHTML.replace(/\s{2,}/g, ''), expected, 'Outer HTML before create and after destroy is equal.');
 });
+
+start();
