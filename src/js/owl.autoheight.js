@@ -63,11 +63,14 @@
 	 * Updates the view.
 	 */
 	AutoHeight.prototype.update = function() {
-		var start = this._core._current,
-			end = start + this._core.settings.items,
-			visible = this._core.$stage.children().toArray().slice(start, end),
+		var core = this._core,
+            start = core._current,
+			end = start + core.settings.items,
+			visible = core.$stage.children().toArray().slice(start, end),
 			heights = [],
-			maxheight = 0;
+			maxheight = 0,
+            parent_height,
+			transitionend = 'transitionend webkitTransitionEnd oTransitionEnd otransitionend';
 
 		$.each(visible, function(index, item) {
 			heights.push($(item).height());
@@ -75,9 +78,21 @@
 
 		maxheight = Math.max.apply(null, heights);
 
-		this._core.$stage.parent()
-			.height(maxheight)
-			.addClass(this._core.settings.autoHeightClass);
+        parent_height = core.$stage.parent().height();
+        if (parent_height === maxheight) {
+            console.log(parent_height + '=' + maxheight);
+            return;
+        } else {
+            console.log(parent_height + '=/=' + maxheight);
+            core.$stage.parent()
+                .height(maxheight)
+                .addClass(core.settings.autoHeightClass)
+                .off(transitionend) // otherwise if transitionend is never fired, will accumulate
+                .one(transitionend, function(e) {
+                    console.info('AutoHeight: transitionend, calling refresh...');
+                    core.refresh();
+                });
+        }
 	};
 
 	AutoHeight.prototype.destroy = function() {

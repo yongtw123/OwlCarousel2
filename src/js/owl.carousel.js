@@ -609,11 +609,16 @@
 
 		this.optionsLogic();
 
-		this.$element.addClass(this.options.refreshClass);
+        // Do not allow display:none
+		//this.$element.addClass(this.options.refreshClass);
 
 		this.update();
 
-		this.$element.removeClass(this.options.refreshClass);
+        // https://github.com/smashingboxes/OwlCarousel2/pull/983
+        // CAUTION: may infinite loop?
+        this.onResize();
+
+		//this.$element.removeClass(this.options.refreshClass);
 
 		this.leave('refreshing');
 		this.trigger('refreshed');
@@ -1144,6 +1149,9 @@
 		} else {
 			coordinate = this._coordinates[newPosition] || 0;
 		}
+
+        // https://github.com/smashingboxes/OwlCarousel2/pull/1067
+        //coordinate = Math.ceil(coordinate);
 
 		return coordinate;
 	};
